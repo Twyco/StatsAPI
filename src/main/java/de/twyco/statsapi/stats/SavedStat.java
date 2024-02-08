@@ -2,9 +2,9 @@ package de.twyco.statsapi.stats;
 
 import org.jetbrains.annotations.NotNull;
 
-public class SavedStat <V extends Number> extends Stat<V>{
+public class SavedStat extends Stat{
 
-    protected SavedStat(@NotNull String statName, @NotNull V value) {
+    protected SavedStat(@NotNull String statName, double value) {
         super(statName, value);
     }
 

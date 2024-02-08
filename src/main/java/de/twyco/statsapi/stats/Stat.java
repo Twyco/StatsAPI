@@ -2,25 +2,29 @@ package de.twyco.statsapi.stats;
 
 import org.jetbrains.annotations.NotNull;
 
-public abstract class Stat <V extends Number> {
+public abstract class Stat {
 
     protected final String statName;
-    protected V value;
+    protected double value;
 
-    protected Stat(@NotNull String statName, @NotNull V value){
+    protected Stat(@NotNull String statName, double value){
         this.statName = statName;
-        this.value = value;
+        setValue(value);
     }
 
     protected String getStatName() {
         return statName;
     }
 
-    public V getValue() {
+    public double getValue() {
         return value;
     }
 
-    protected void setValue(V value) {
+    protected void setValue(double value) {
+        value *= 100;
+        value = (int) value;
+        value /= 100;
         this.value = value;
     }
+
 }
