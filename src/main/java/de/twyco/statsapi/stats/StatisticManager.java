@@ -131,7 +131,7 @@ public class StatisticManager {
 
     /**
      * Gibt die Namen aller Statistiken des aktuellen Minigames aus.
-     * @return Ein Set aus allen Namen
+     * @return Ein {@link Set} aus allen Namen
      * @see SavedStat
      */
     public Set<String> getSavedStatsNames() {
@@ -145,17 +145,16 @@ public class StatisticManager {
 
     /**
      * Gibt die Namen aller gespeicherten Statistiken des aktuellen Minigames aus.
-     * @return Ein Set aller Namen
-     * @see SavedStat
+     * @return Ein {@link Set} aller {@link SavedStat}
      */
     public Set<SavedStat> getSavedStats() {
         return this.statistic.getSavedStats();
     }
 
     /**
-     * Gibt alle gespeicherten Statistiken des aktuellen Minigames aus.
-     * @return Ein Set aus allen Statistiken
-     * @see SavedStat
+     * Auslesen einer gespeicherten Statistik mit bestimmten Namen.
+     * @param savedStatName Der Name der Statistik.
+     * @return Ein {@link Set} aus allen {@link SavedStat}
      */
     public SavedStat getSavedStat(String savedStatName) {
         return this.statistic.getSavedStat(savedStatName);
@@ -173,9 +172,8 @@ public class StatisticManager {
 
     /**
      * Überprüft, ob es bei dem aktuellen Minigame genau diese gespeicherte Statistik gibt.
-     * @param savedStat Die Statistik.
+     * @param savedStat Die {@link SavedStat}.
      * @return true, wenn es genau diese Statistik gibt. false, sonst.
-     * @see SavedStat
      */
     public boolean containSavedStat(SavedStat savedStat) {
         return this.statistic.containsSavedStat(savedStat);
@@ -183,7 +181,7 @@ public class StatisticManager {
 
     /**
      * Gibt die Namen aller displayed Statistiken, des aktuellen Minigames aus.
-     * @return Ein Set aus allen Namen
+     * @return Ein {@link Set} aus allen Namen
      * @see DisplayedStat
      */
     public Set<String> getDisplayedStatsNames() {
@@ -197,7 +195,7 @@ public class StatisticManager {
 
     /**
      * Gibt die displayed Statistiken, des aktuellen Minigames aus.
-     * @return Ein Set aller Statistiken
+     * @return Ein {@link Set} aller {@link DisplayedStat}
      * @see DisplayedStat
      */
     public Set<DisplayedStat> getDisplayedStats() {
@@ -205,8 +203,9 @@ public class StatisticManager {
     }
 
     /**
-     * Gibt alle displayed Statistiken des aktuellen Minigames aus.
-     * @return Ein Set aus allen Statistiken
+     * Auslesen einer displayed Statistik mit bestimmten Namen.
+     * @param displayedStatName Der Name der {@link DisplayedStat}
+     * @return Ein {@link Set} aus allen {@link DisplayedStat}
      * @see DisplayedStat
      */
     public DisplayedStat getDisplayedStat(String displayedStatName) {
