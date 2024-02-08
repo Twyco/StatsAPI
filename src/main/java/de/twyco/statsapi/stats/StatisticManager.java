@@ -6,8 +6,11 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Diese Klasse bietet eine Schnittstelle für das Speichern und Auslesen der Stats eines Spieler
+ * Diese Klasse bietet eine Schnittstelle für das Speichern und Auslesen der Stats eines Spielers.
  * @author Twyco
+ * @see SavedStat
+ * @see DisplayedStat
+ * @see Stat
  */
 
 public class StatisticManager {
@@ -103,7 +106,7 @@ public class StatisticManager {
 
     /**
      * Auslesen der aktuellen MinigameID.
-     * @return
+     * @return Die ID des Minigames
      */
     public int getMinigameID() {
         return this.statistic.getMinigameID();
@@ -120,7 +123,7 @@ public class StatisticManager {
 
     /**
      * Auslesen der ID der aktuellen Season.
-     * @return
+     * @return Die ID der Season
      */
     public int getSeasonID() {
         return this.statistic.getSeasonID();

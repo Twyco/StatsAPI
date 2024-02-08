@@ -5,6 +5,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
+
+/**
+ * Eine DisplayedStat ist eine Statistik, die von {@link Stat} erbt.
+ * DisplayedStats sind die Statistiken, die einen Displaynamen, Struktur (Berechnung des Wertes) und SavedStats besitzt.
+ * Eine DisplayedStat berechnet durch die Struktur, mit den SavedStats seinen Wert.
+ *
+ * @see StatisticManager
+ * @see SavedStat
+ * @see Stat
+ * @author Twyco
+ */
 public class DisplayedStat extends Stat {
 
     private final String structure;
@@ -16,10 +27,18 @@ public class DisplayedStat extends Stat {
         this.savedStats = savedStats;
     }
 
+    /**
+     * Auslesen des Displaynamens / Ausgabename der Statistik.
+     * @return Der Displayname / Ausgabename der Statistik.
+     */
     public String getDisplayName() {
         return super.getStatName();
     }
 
+    /**
+     * Auslesen des berechneten Wertes der Statistik.
+     * @return Der Wert der Statistik.
+     */
     @Override
     public double getValue() {
         super.setValue(decodeStatValue(structure));

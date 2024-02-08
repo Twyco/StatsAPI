@@ -2,6 +2,12 @@ package de.twyco.statsapi.stats;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Eine Stat ist eine Statistic, die einen Namen und Wert besitzt
+ * @see SavedStat
+ * @see DisplayedStat
+ * @author Twyco
+ */
 public abstract class Stat {
 
     protected final String statName;
@@ -16,6 +22,10 @@ public abstract class Stat {
         return statName;
     }
 
+    /**
+     * Auslesen des Wertes der Statistik.
+     * @return den Wert der Statistik.
+     */
     public double getValue() {
         return value;
     }
