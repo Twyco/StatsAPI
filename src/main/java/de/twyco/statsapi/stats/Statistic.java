@@ -121,10 +121,12 @@ public class Statistic {
 
     protected void setMinigameID(int minigameID) {
         this.minigameID = minigameID;
+        //TODO Methode zum neuladen eines anderen minigames
     }
 
     protected void setSeasonID(int seasonID) {
         this.seasonID = seasonID;
+        reloadStats();
     }
 
     protected UUID getUUID() {
