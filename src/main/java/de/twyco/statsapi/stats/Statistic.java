@@ -1,5 +1,6 @@
 package de.twyco.statsapi.stats;
 
+import de.twyco.statsapi.misc.Database;
 import org.json.*;
 
 import java.util.*;
@@ -9,44 +10,48 @@ public class Statistic {
     private final UUID uuid;
     private int minigameID;
     private int seasonID;
-    private final Set<SavedStat> savedStats;
-    private final Set<DisplayedStat> displayedStats;
+    private Set<SavedStat> savedStats;
+    private Set<DisplayedStat> displayedStats;
+    private final Database database;
 
-    protected Statistic(UUID uuid, int minigameID, int seasonID) {
+    protected Statistic(UUID uuid, int minigameID, int seasonID, Database database) {
         this.uuid = uuid;
         this.minigameID = minigameID;
         this.seasonID = seasonID;
+        this.database = database;
         this.savedStats = new HashSet<>();
         this.displayedStats = new HashSet<>();
         loadStats();
     }
 
     private void loadStats() {
-        //TODO get json structure form Database
-        String json = "{\"saved\":[\"kills\",\"deaths\",\"games\",\"games_won\"],\"displayed\":[{\"Deine Kills\":\"%kills%\"},{\"Deine Tode\":\"%deaths%\"},{\"Deine K/D\":\"%kills%/%deaths%\"},{\"Winrate\":\"(%games_won%/%games%)*100\"}]}";
-        JSONObject jsonObject = new JSONObject(json);
+        String structure = this.database.getStructure(this.minigameID);
+        this.savedStats = new HashSet<>();
+        this.displayedStats = new HashSet<>();
+        JSONObject jsonObject = new JSONObject(structure);
         JSONArray savedStats = jsonObject.getJSONArray("saved");
         JSONArray displayedStatsStructure = jsonObject.getJSONArray("displayed");
-        Random random = new Random();
+        HashMap<String, Double> stats = this.database.getStats(this.uuid, this.seasonID, this.minigameID);
         for (Object obj : savedStats) {
             String statName = String.valueOf(obj);
-            double value = (int) (random.nextDouble() * 10); //TODO Get Value from Database with seasonID, minigameID, and statName
-            System.out.println(statName + " " + value);
+            double value = stats.get(statName);
             this.savedStats.add(new SavedStat(statName, value));
         }
         for (int i = 0; i < displayedStatsStructure.length(); i++) {
             JSONObject item = displayedStatsStructure.getJSONObject(i);
             String displayStatsName = item.keySet().stream().toList().get(0);
-            String structure = item.getString(displayStatsName);
-            this.displayedStats.add(new DisplayedStat(displayStatsName, structure, this.savedStats));
+            String itemStructure = item.getString(displayStatsName);
+            this.displayedStats.add(new DisplayedStat(displayStatsName, itemStructure, this.savedStats));
         }
 
     }
 
+
     protected void reloadStats() {
+        HashMap<String, Double> stats = this.database.getStats(this.uuid, this.seasonID, this.minigameID);
         for (SavedStat stat : this.savedStats) {
             String statName = stat.getStatName();
-            double value = 0; //TODO Get Value from Database with seasonID, minigameID, and statName
+            double value = stats.get(statName);
             stat.setValue(value);
         }
     }
@@ -121,7 +126,7 @@ public class Statistic {
 
     protected void setMinigameID(int minigameID) {
         this.minigameID = minigameID;
-        //TODO Methode zum neuladen eines anderen minigames
+        loadStats();
     }
 
     protected void setSeasonID(int seasonID) {

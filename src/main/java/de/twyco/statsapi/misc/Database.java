@@ -36,9 +36,7 @@ public class Database {
         assert json != null;
         JSONObject jsonObject = new JSONObject(json);
         JSONArray seasonArray = new JSONArray(jsonObject.getJSONArray("Seasons"));
-
         JSONArray minigamesArray = getJSONArray_ByKeyFromArray(seasonArray, String.valueOf(seasonID));
-        System.out.println(minigamesArray);
 
         return IDSet(minigamesArray);
     }
@@ -75,6 +73,14 @@ public class Database {
         for (String key : statsMap.keySet()) {
             saveStat(uuid, seasonID, minigameID, key, statsMap.get(key));
         }
+    }
+
+    public String getStructure(int minigameID) {
+        String json = readFile();
+        assert json != null;
+        JSONObject jsonObject = new JSONObject(json);
+        JSONObject minigames = jsonObject.getJSONObject("Minigames");
+        return minigames.getString(String.valueOf(minigameID));
     }
 
     @NotNull

@@ -1,5 +1,7 @@
 package de.twyco.statsapi.stats;
 
+import de.twyco.statsapi.misc.Database;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -7,6 +9,7 @@ import java.util.UUID;
 
 /**
  * Diese Klasse bietet eine Schnittstelle für das Speichern und Auslesen der Stats eines Spielers.
+ *
  * @author Twyco
  * @see SavedStat
  * @see DisplayedStat
@@ -21,23 +24,24 @@ public class StatisticManager {
      * Erstellt ein neues Verwaltungsobjekt,
      * dass die Stats eines Spielers, mit dessen UUID, ändern, so wie auslesen kann.
      *
-     * @param uuid UUID des Spielers, dessen Stats du verwalten möchtest.
+     * @param uuid       UUID des Spielers, dessen Stats du verwalten möchtest.
      * @param minigameID Die ID des Minigames dessen Stats du verwalten möchtest.
-     * @param seasonID Die ID der Seasion, dessen Stats du verwalten möchtest.
+     * @param seasonID   Die ID der Season, dessen Stats du verwalten möchtest.
      */
-    public StatisticManager(UUID uuid, Short minigameID, Short seasonID) {
-        this.statistic = new Statistic(uuid, minigameID, seasonID);
+    public StatisticManager(UUID uuid, int minigameID, int seasonID) {
+        this.statistic = new Statistic(uuid, minigameID, seasonID, new Database());
     }
 
     /**
-     * Lädt die Stats zu dem akutellem Minigame und Season neu.
+     * Lädt die Stats zu dem akutellen Minigame und Season neu.
      */
-    public void reloadStats(){
+    public void reloadStats() {
         this.statistic.reloadStats();
     }
 
     /**
      * Setzt die Statistik in dem aktuellen Minigame und der Season auf den gegebenen Wert.
+     *
      * @param statName Der Name der Statistik, die geändert werden soll.
      * @param newValue Der neue Wert der Statistik.
      */
@@ -50,7 +54,8 @@ public class StatisticManager {
 
     /**
      * Setzt die Statistik in dem aktuellen Minigame und der Season auf den gegebenen Wert.
-     * @param stat Die Statistik, die geändert werden soll.
+     *
+     * @param stat     Die Statistik, die geändert werden soll.
      * @param newValue Der neue Wert der Statistik.
      */
     public void setStatValue(SavedStat stat, double newValue) {
@@ -62,7 +67,8 @@ public class StatisticManager {
 
     /**
      * Setzt die Statistik in dem aktuellen Minigame und der Season um die gegebene Differenz.
-     * @param statName Der Name der Statistik, die geändert werden soll.
+     *
+     * @param statName   Der Name der Statistik, die geändert werden soll.
      * @param difference Der neue Wert der Statistik.
      */
     public void changeStatValue(String statName, double difference) {
@@ -76,7 +82,8 @@ public class StatisticManager {
 
     /**
      * Ändert die Statistik in dem aktuellen Minigame und der Season um die gegebene Differenz.
-     * @param stat Die Statistik, die geändert werden soll.
+     *
+     * @param stat       Die Statistik, die geändert werden soll.
      * @param difference Der neue Wert der Statistik.
      */
     public void changeStatValue(SavedStat stat, double difference) {
@@ -98,6 +105,7 @@ public class StatisticManager {
     /**
      * Ändert das Minigame, dessen Statistiken verwaltet werden.
      * Lädt die Statistiken anschließend neu.
+     *
      * @param minigameID Die ID des neuen Minigames, dessen Statistiken verwaltet werden.
      */
     public void setMinigameID(int minigameID) {
@@ -106,6 +114,7 @@ public class StatisticManager {
 
     /**
      * Auslesen der aktuellen MinigameID.
+     *
      * @return Die ID des Minigames
      */
     public int getMinigameID() {
@@ -115,6 +124,7 @@ public class StatisticManager {
     /**
      * Ändert die Season, dessen Statistiken verwaltet werden.
      * Lädt die Statistiken anschließend neu.
+     *
      * @param seasonID Die ID der neuen Season, dessen Statistiken verwaltet werden.
      */
     public void setSeasonID(int seasonID) {
@@ -123,6 +133,7 @@ public class StatisticManager {
 
     /**
      * Auslesen der ID der aktuellen Season.
+     *
      * @return Die ID der Season
      */
     public int getSeasonID() {
@@ -131,6 +142,7 @@ public class StatisticManager {
 
     /**
      * Gibt die Namen aller Statistiken des aktuellen Minigames aus.
+     *
      * @return Ein {@link Set} aus allen Namen
      * @see SavedStat
      */
@@ -145,6 +157,7 @@ public class StatisticManager {
 
     /**
      * Gibt die Namen aller gespeicherten Statistiken des aktuellen Minigames aus.
+     *
      * @return Ein {@link Set} aller {@link SavedStat}
      */
     public Set<SavedStat> getSavedStats() {
@@ -153,6 +166,7 @@ public class StatisticManager {
 
     /**
      * Auslesen einer gespeicherten Statistik mit bestimmten Namen.
+     *
      * @param savedStatName Der Name der Statistik.
      * @return Ein {@link Set} aus allen {@link SavedStat}
      */
@@ -162,6 +176,7 @@ public class StatisticManager {
 
     /**
      * Überprüft, ob es bei dem aktuellen Minigame eine gespeicherte Statistik mit dem Namen gibt.
+     *
      * @param savedStatName Der Name der Statistik.
      * @return true, wenn es eine Statistik mit dem Namen gibt. false, sonst
      * @see SavedStat
@@ -172,6 +187,7 @@ public class StatisticManager {
 
     /**
      * Überprüft, ob es bei dem aktuellen Minigame genau diese gespeicherte Statistik gibt.
+     *
      * @param savedStat Die {@link SavedStat}.
      * @return true, wenn es genau diese Statistik gibt. false, sonst.
      */
@@ -181,6 +197,7 @@ public class StatisticManager {
 
     /**
      * Gibt die Namen aller displayed Statistiken, des aktuellen Minigames aus.
+     *
      * @return Ein {@link Set} aus allen Namen
      * @see DisplayedStat
      */
@@ -195,6 +212,7 @@ public class StatisticManager {
 
     /**
      * Gibt die displayed Statistiken, des aktuellen Minigames aus.
+     *
      * @return Ein {@link Set} aller {@link DisplayedStat}
      * @see DisplayedStat
      */
@@ -204,6 +222,7 @@ public class StatisticManager {
 
     /**
      * Auslesen einer displayed Statistik mit bestimmten Namen.
+     *
      * @param displayedStatName Der Name der {@link DisplayedStat}
      * @return Ein {@link Set} aus allen {@link DisplayedStat}
      * @see DisplayedStat
@@ -214,6 +233,7 @@ public class StatisticManager {
 
     /**
      * Überprüft, ob es bei dem aktuellen Minigame genau diese displayed Statistik gibt.
+     *
      * @param displayedStatName Der Name der Statistik.
      * @return true, wenn es genau diese Statistik gibt. false, sonst.
      * @see DisplayedStat
@@ -224,6 +244,7 @@ public class StatisticManager {
 
     /**
      * Überprüft, ob es bei dem aktuellen Minigame genau diese displayed Statistik gibt.
+     *
      * @param displayedStat Die Statistik.
      * @return true, wenn es genau diese Statistik gibt. false, sonst.
      * @see DisplayedStat
@@ -234,10 +255,19 @@ public class StatisticManager {
 
     /**
      * Auslesen der UUID, dessen Statistiken verwaltet werden.
+     *
      * @return die UUID
      */
     public UUID getUUID() {
         return this.statistic.getUUID();
     }
 
+
+    /**
+     * Auslesen aller UUIDs, die in des aktuellen Season und Minigame Statistiken besitzen.
+     * @return Ein {@link Set} der UUIDs
+     */
+    public Set<UUID> getUUIDS() {
+        return null; //TODO
+    }
 }
