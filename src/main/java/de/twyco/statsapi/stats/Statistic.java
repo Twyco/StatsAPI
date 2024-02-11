@@ -60,7 +60,7 @@ public class Statistic {
         for (SavedStat stat : this.savedStats) {
             String statName = stat.getStatName();
             double value = stat.getValue();
-            //TODO Save Value into Database with seasonID, minigameID, and statName
+            database.saveStat(this.uuid, this.seasonID, this.minigameID, statName, value);
         }
     }
 

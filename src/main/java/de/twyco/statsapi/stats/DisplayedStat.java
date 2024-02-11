@@ -54,7 +54,7 @@ public class DisplayedStat extends Stat {
         String output = s;
         for (SavedStat stat : savedStats) {
             if (output.contains("%" + stat.getStatName() + "%")) {
-                output = output.replace("%" + stat.getStatName() + "%", "&" + stat.getValue());
+                output = output.replace("%" + stat.getStatName() + "%", String.valueOf(stat.getValue()));
             }
         }
         if (output.contains("%")) {

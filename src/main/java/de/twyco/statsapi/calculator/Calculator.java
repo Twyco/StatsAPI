@@ -3,10 +3,10 @@ package de.twyco.statsapi.calculator;
 public abstract class Calculator {
 
     public static double calculateStringTerm(String term) {
-        if(!validateTerm(term)){
+        if (!validateTerm(term)) {
             throw new IllegalArgumentException("The String term is not a valid Term!");
         }
-        while (containsNonTerminal(term)){
+        while (containsNonTerminal(term)) {
             term = calculateInnermostNonTerminal(term);
         }
         return Double.parseDouble(term);
@@ -25,10 +25,15 @@ public abstract class Calculator {
                 break;
             }
         }
-        String innermostNonTerminal = term.substring(openInnermostBracket + 1, closeInnermostBracket);
-        String innermostNonTerminalWithBrackets = term.substring(openInnermostBracket, closeInnermostBracket + 1);
-        double terminal = calculateNonTerminal(innermostNonTerminal);
-        return term.replace(innermostNonTerminalWithBrackets, String.valueOf(terminal));
+        if (openInnermostBracket == -1) {
+            double terminal = calculateNonTerminal(term);
+            return String.valueOf(terminal);
+        }else {
+            String innermostNonTerminal = term.substring(openInnermostBracket + 1, closeInnermostBracket);
+            String innermostNonTerminalWithBrackets = term.substring(openInnermostBracket, closeInnermostBracket + 1);
+            double terminal = calculateNonTerminal(innermostNonTerminal);
+            return term.replace(innermostNonTerminalWithBrackets, String.valueOf(terminal));
+        }
     }
 
     private static double calculateNonTerminal(String term) {
@@ -57,7 +62,7 @@ public abstract class Calculator {
             }
         }
         double firstOperand = Double.parseDouble(fstOperand.toString());
-        if(op.isEmpty()){
+        if (op.isEmpty()) {
             return firstOperand;
         }
         Operator operator = Operator.valueOf(op.toString().toUpperCase());
