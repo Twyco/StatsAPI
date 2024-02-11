@@ -1,6 +1,6 @@
 package de.twyco.statsapi.stats;
 
-import de.twyco.statsapi.misc.StringCalculator;
+import de.twyco.statsapi.calculator.Calculator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -47,14 +47,14 @@ public class DisplayedStat extends Stat {
 
     private double decodeStatValue(String value) {
         String replacedPlaceHolder = replacePlaceHolder(value);
-        return StringCalculator.evaluateExpression(replacedPlaceHolder);
+        return Calculator.calculateStringTerm(replacedPlaceHolder);
     }
 
     private String replacePlaceHolder(String s) {
         String output = s;
         for (SavedStat stat : savedStats) {
             if (output.contains("%" + stat.getStatName() + "%")) {
-                output = output.replace("%" + stat.getStatName() + "%", String.valueOf(stat.getValue()));
+                output = output.replace("%" + stat.getStatName() + "%", "&" + stat.getValue());
             }
         }
         if (output.contains("%")) {
