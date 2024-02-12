@@ -28,6 +28,7 @@ public class StatisticManager {
      * @param uuid       UUID des Spielers, dessen Stats du verwalten möchtest.
      * @param minigameID Die ID des Minigames dessen Stats du verwalten möchtest.
      * @param seasonID   Die ID der Season, dessen Stats du verwalten möchtest.
+     * @param database   File, in der die Stats gespeichert werden. (BETA wird entfernt und in config file verschoben, zu ip, port, username, passwort für MonogDB geändert)
      */
     public StatisticManager(UUID uuid, int minigameID, int seasonID, File database) { //TODO ADD DATABASE OR DATABASE LOGIN INFOS
         this.statistic = new Statistic(uuid, minigameID, seasonID, new Database(database));
@@ -266,6 +267,7 @@ public class StatisticManager {
 
     /**
      * Auslesen aller UUIDs, die in des aktuellen Season und Minigame Statistiken besitzen.
+     * TODO, doesnt work right now
      * @return Ein {@link Set} der UUIDs
      */
     public Set<UUID> getUUIDS() {
