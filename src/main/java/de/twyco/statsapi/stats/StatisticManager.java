@@ -2,6 +2,7 @@ package de.twyco.statsapi.stats;
 
 import de.twyco.statsapi.misc.Database;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,8 +29,8 @@ public class StatisticManager {
      * @param minigameID Die ID des Minigames dessen Stats du verwalten möchtest.
      * @param seasonID   Die ID der Season, dessen Stats du verwalten möchtest.
      */
-    public StatisticManager(UUID uuid, int minigameID, int seasonID) {
-        this.statistic = new Statistic(uuid, minigameID, seasonID, new Database());
+    public StatisticManager(UUID uuid, int minigameID, int seasonID, File database) { //TODO ADD DATABASE OR DATABASE LOGIN INFOS
+        this.statistic = new Statistic(uuid, minigameID, seasonID, new Database(database));
     }
 
     /**

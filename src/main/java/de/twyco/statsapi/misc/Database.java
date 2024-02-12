@@ -10,6 +10,12 @@ import java.util.*;
 public class Database {
     //TODO Change to Safe in MongoDB
 
+    private File database;
+
+    public Database(File database) {
+        this.database = database;
+    }
+
     @NotNull
     public HashMap<String, Double> getStats(UUID uuid, int seasonID, int minigameID) {
         String json = readFile();
@@ -120,7 +126,7 @@ public class Database {
 
     private String readFile() {
         try {
-            final FileReader fileReader = new FileReader("src/main/resources/testData.json");
+            final FileReader fileReader = new FileReader(database);
             final BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             StringBuilder jsonBuilder = new StringBuilder();
@@ -139,7 +145,7 @@ public class Database {
 
     private void writeFile(String content) {
         try {
-            final FileWriter fileWriter = new FileWriter("src/main/resources/testData.json");
+            final FileWriter fileWriter = new FileWriter(database);
             fileWriter.write(content);
             fileWriter.close();
         } catch (IOException e) {
