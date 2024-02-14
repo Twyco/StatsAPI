@@ -10,24 +10,18 @@ public class Statistic {
     private final UUID uuid;
     private int minigameID;
     private int seasonID;
-    private Set<SavedStat> savedStats;
-    private Set<DisplayedStat> displayedStats;
-    private final Database database;
+    private Set<Stat> stats;
 
-    protected Statistic(UUID uuid, int minigameID, int seasonID, Database database) {
+    protected Statistic(UUID uuid, int minigameID, int seasonID) {
         this.uuid = uuid;
         this.minigameID = minigameID;
         this.seasonID = seasonID;
-        this.database = database;
-        this.savedStats = new HashSet<>();
-        this.displayedStats = new HashSet<>();
-        loadStats();
+        this.stats = new HashSet<>();
+        //loadStats();
     }
 
-    private void loadStats() {
-        String structure = this.database.getStructure(this.minigameID);
-        this.savedStats = new HashSet<>();
-        this.displayedStats = new HashSet<>();
+   /* private void loadStats() {
+        this.stats = new HashSet<>();
         JSONObject jsonObject = new JSONObject(structure);
         JSONArray savedStats = jsonObject.getJSONArray("saved");
         JSONArray displayedStatsStructure = jsonObject.getJSONArray("displayed");
@@ -136,5 +130,5 @@ public class Statistic {
 
     protected UUID getUUID() {
         return uuid;
-    }
+    }*/
 }

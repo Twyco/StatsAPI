@@ -3,7 +3,7 @@ plugins {
     id ("maven-publish")
 }
 group = "de.twyco"
-version = "1.0.1-BETA"
+version = "2.0.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -14,7 +14,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("org.json:json:20231013")
     implementation("org.jetbrains:annotations:24.0.0")
-
+    implementation("org.mongodb:mongodb-driver-sync:4.11.1")
+    implementation("org.yaml:snakeyaml:2.2")
 }
 publishing {
     repositories {

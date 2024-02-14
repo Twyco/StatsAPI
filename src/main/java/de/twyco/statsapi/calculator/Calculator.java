@@ -2,6 +2,7 @@ package de.twyco.statsapi.calculator;
 
 public abstract class Calculator {
 
+
     public static double calculateStringTerm(String term) {
         if (!validateTerm(term)) {
             throw new IllegalArgumentException("The String term is not a valid Term!");

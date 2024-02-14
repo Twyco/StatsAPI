@@ -1,5 +1,7 @@
 package de.twyco.statsapi.misc;
 
+import de.twyco.statsapi.startup.APILoader;
+import de.twyco.statsapi.stats.Stat;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,7 +12,7 @@ import java.util.*;
 public class Database {
     //TODO Change to Safe in MongoDB
 
-    private File database;
+    private final File database;
 
     public Database(File database) {
         this.database = database;
