@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public abstract class Settings {
 
-    private static boolean freezeSettings = false;
+    private static boolean writeAPI = false;
 
     private static String host;
     private static int port;
@@ -17,56 +17,44 @@ public abstract class Settings {
     private static HashMap<String, String> dummyEntry;
     private static String pointsCalculation;
 
-    public static void freezeSettings() {
-        freezeSettings = true;
+    public static void setWriteAPI(boolean writeAPI) {
+        Settings.writeAPI = writeAPI;
     }
 
     public static void setHost(String host) {
-        if (!freezeSettings) {
-            Settings.host = host;
-        }
+        Settings.host = host;
     }
 
     public static void setPort(int port) {
-        if (!freezeSettings) {
-            Settings.port = port;
-        }
+        Settings.port = port;
     }
 
     public static void setUsername(String username) {
-        if (!freezeSettings) {
-            Settings.username = username;
-        }
+        Settings.username = username;
     }
 
     public static void setPassword(String password) {
-        if (!freezeSettings) {
-            Settings.password = password;
-        }
+        Settings.password = password;
     }
 
     public static void setStatsID(int statsID) {
-        if (!freezeSettings) {
-            Settings.statsID = statsID;
-        }
+        Settings.statsID = statsID;
     }
 
     public static void setStatsName(String statsName) {
-        if (!freezeSettings) {
-            Settings.statsName = statsName;
-        }
+        Settings.statsName = statsName;
     }
 
     public static void setDummyEntry(HashMap<String, String> dummyEntry) {
-        if (!freezeSettings) {
-            Settings.dummyEntry = dummyEntry;
-        }
+        Settings.dummyEntry = dummyEntry;
     }
 
     public static void setPointsCalculation(String pointsCalculation) {
-        if (!freezeSettings) {
-            Settings.pointsCalculation = pointsCalculation;
-        }
+        Settings.pointsCalculation = pointsCalculation;
+    }
+
+    public static boolean isWriteAPI() {
+        return writeAPI;
     }
 
     public static String getHost() {

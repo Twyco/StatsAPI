@@ -1,7 +1,5 @@
 package de.twyco.statsapi.misc;
 
-import de.twyco.statsapi.startup.APILoader;
-import de.twyco.statsapi.stats.Stat;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;

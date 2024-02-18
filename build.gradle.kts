@@ -14,8 +14,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("org.json:json:20231013")
     implementation("org.jetbrains:annotations:24.0.0")
-    implementation("org.mongodb:mongodb-driver-sync:4.11.1")
     implementation("org.yaml:snakeyaml:2.2")
+    implementation("mysql:mysql-connector-java:8.0.28")
 }
 publishing {
     repositories {
