@@ -10,7 +10,7 @@ import java.util.*;
 public class Database {
     //TODO Change to Safe in MongoDB
 
-    private File database;
+    private final File database;
 
     public Database(File database) {
         this.database = database;

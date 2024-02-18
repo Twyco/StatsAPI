@@ -1,0 +1,46 @@
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                                       DATABASE SETTINGS                                      | #
+# |                                              SQL                                             | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+database:
+  host: localhost
+  port: 3306
+  username: username
+  password: password
+
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                                      Statistic SETTINGS                                      | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+# The StatsIP defines which stats this API manages.
+# Set to -1 if you want to read stats.
+statsID: -1
+statsName: minigameStats
+
+# The dummy entry represents the structure of the stats managed by this API.
+# The key is the name in the database and the value is the display name.
+# ignored if statsID = -1
+dummyEntry:
+  kills: "Kills"
+  deaths: "Tode"
+  kd: "K/D"
+  gamesPlayed: "Gespielte Runden"
+  gamesWon: "Gewonnene Runden"
+
+# The points calculation indicates how the points for the ranking are calculated.
+# The following can be used:
+# - the key-name of a statistic, covered by '%'. E.g '%kills%'.
+# - '$add$' as an +
+# - '$sub$' as an -
+# - '$div$' as an /
+# - '$mul$' as an *
+# - '(' and ')'
+# - Decimal numbers (negativ numbers starts with '-'. E.g. '-12.345)
+# An example for a valid calculation:
+# '((%gamesWon%$div$%gamesPlayed%)$mul$100)$mul$%kills%'
+# %kills%, ranks only after kills.
+# ignored if statsID = -1
+pointsCalculation: "%kills%"

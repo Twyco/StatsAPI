@@ -2,28 +2,41 @@ package de.twyco.statsapi.stats;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Set;
+
 /**
- * Eine Stat ist eine Statistic, die einen Namen und Wert besitzt
- * @see SavedStat
- * @see DisplayedStat
+ * Ein Stat ist eine Statistic, die einen Namen und Wert besitzt
+ *
  * @author Twyco
+ * @see StatisticManager
  */
-public abstract class Stat {
+public class Stat {
 
-    protected final String statName;
-    protected double value;
+    private final String statName;
+    private double value;
 
-    protected Stat(@NotNull String statName, double value){
+    protected Stat(@NotNull String statName, double value) {
         this.statName = statName;
-        setValue(value);
+        this.value = value;
     }
 
-    protected String getStatName() {
+    protected Stat(@NotNull String statName) {
+        this.statName = statName;
+        this.value = value;
+    }
+
+    /**
+     * Auslesen des Namens der Statistik.
+     *
+     * @return der Name der Statistik.
+     */
+    public String getName() {
         return statName;
     }
 
     /**
      * Auslesen des Wertes der Statistik.
+     *
      * @return den Wert der Statistik.
      */
     public double getValue() {
