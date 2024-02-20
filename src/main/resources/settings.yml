@@ -18,6 +18,8 @@ database:
 # The StatsIP defines which stats this API manages.
 # Set to -1 if you want to read stats.
 statsID: -1
+
+# Following Settings will be updated automatically, if statsID already Exists
 statsName: minigameStats
 
 # The dummy entry represents the structure of the stats managed by this API.
