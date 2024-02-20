@@ -64,7 +64,7 @@ public abstract class APILoader {
         if (!statExists(Settings.getStatsID())) {
             createStat(Settings.getStatsID(), Settings.getStatsName());
         } else {
-            //TODO Override dummyEntry, statName and Point Calulcation in settings.yml
+            //TODO Override dummyEntry, statName and Point Calculation in settings.yml
             // reload Settings
         }
         if (!statExistsInCurrentSeason(Settings.getStatsID())) {
@@ -316,6 +316,10 @@ public abstract class APILoader {
         } catch (SQLException e) {
             System.err.println("Can't connect to MySQL: " + e.getMessage());
         }
+    }
+
+    private static void loadStats(){
+        //TODO Alle statIDs zu Data hinzufügen
     }
 
     private static void setCurrentSeason() {

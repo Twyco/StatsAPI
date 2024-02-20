@@ -2,8 +2,6 @@ package de.twyco.statsapi.stats;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
-
 /**
  * Ein Stat ist eine Statistic, die einen Namen und Wert besitzt
  *
@@ -16,11 +14,6 @@ public class Stat {
     private double value;
 
     protected Stat(@NotNull String statName, double value) {
-        this.statName = statName;
-        this.value = value;
-    }
-
-    protected Stat(@NotNull String statName) {
         this.statName = statName;
         this.value = value;
     }
