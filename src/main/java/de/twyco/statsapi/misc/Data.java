@@ -9,11 +9,14 @@ public abstract class Data {
     private static final Map<Integer, Date> seasonEndDate;
     private static final Map<Integer, Set<Integer>> statsIDsFromSeason;
 
+    private static final Set<Integer> statsIDs;
+
     static {
         currentSeason = 0;
         seasonStartDate = new HashMap<>();
         seasonEndDate = new HashMap<>();
         statsIDsFromSeason = new HashMap<>();
+        statsIDs = new HashSet<>();
     }
 
     public static void setSeasonStartDate(int seasonID, Date startDate) {
@@ -39,6 +42,10 @@ public abstract class Data {
         Data.statsIDsFromSeason.put(seasonID, statIDs);
     }
 
+    public static void addStatsID(int statID) {
+        Data.statsIDs.add(statID);
+    }
+
     public Date getSeasonStartDate(int seasonID) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2003, Calendar.OCTOBER, 16);
@@ -61,4 +68,7 @@ public abstract class Data {
         return Data.statsIDsFromSeason.getOrDefault(seasonID, new HashSet<>());
     }
 
+    public static Set<Integer> getStatsIDs() {
+        return statsIDs;
+    }
 }

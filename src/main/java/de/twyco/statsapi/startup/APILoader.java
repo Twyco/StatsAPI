@@ -3,6 +3,7 @@ package de.twyco.statsapi.startup;
 import de.twyco.statsapi.misc.Data;
 import de.twyco.statsapi.stats.Stat;
 import de.twyco.statsapi.stats.Statistic;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -10,19 +11,32 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class APILoader {
+
+    /* TODO TESTEN:
+     *  für Read API:
+     *   setStatID()
+     *   setSeasonID()
+     *  für Write API:
+     *   setStatID() -> shouldn't work
+     *   setSeasonID() -> shouldn't work
+     */
+
 
     public static void main(String[] args) throws IOException {
         loadAPI("DataFolder");
         //TESTS
-        Statistic statistic = new Statistic(UUID.fromString("a6555008-9a7e-4668-a505-05517b2b89bc"), 1, 0);
-        for(Stat stat : statistic.getStats()){
-            System.out.println(stat.getName() + ": " + stat.getValue());
+        Statistic statistic = new Statistic(UUID.fromString("a6555008-9a7e-4668-a505-05517b2b89bc"));
+        for (Stat stat : statistic.getStats()) {
+            System.out.println(stat.getName() + " | " + stat.getValue());
         }
+        statistic.setStat("kills", 11);
+        statistic.updateStat("deaths", 3);
+        statistic.setStat("gamesPlayed", 787);
+        statistic.updateStat("gamesWon", 3, -1000);
+        statistic.save();
     }
 
     public static void loadAPI(String dataFolderPath) throws IOException {
@@ -37,19 +51,104 @@ public abstract class APILoader {
             return;
         }
         checkDatabases();
-        if(Settings.isWriteAPI()){
+        setCurrentSeason();
+        loadSeasons();
+        if (Settings.isWriteAPI()) {
             loadAPIasWrite();
-        }else {
+        } else {
             loadAPIasRead();
         }
     }
 
     private static void loadAPIasWrite() {
-        loadSeasons();
+        if (!statExists(Settings.getStatsID())) {
+            createStat(Settings.getStatsID(), Settings.getStatsName());
+        } else {
+            //TODO Override dummyEntry, statName and Point Calculation in settings.yml
+            // reload Settings
+        }
+        if (!statExistsInCurrentSeason(Settings.getStatsID())) {
+            List<String> stats = new ArrayList<>(Settings.getDummyEntry().keySet());
+            createStatTableInCurrentSeason(Settings.getStatsID(), stats);
+        }
+    }
+
+    private static boolean statExists(int statID) {
+        String url = "jdbc:mysql://" + Settings.getHost() + ":" + Settings.getPort() + "/Stats_Settings";
+        String user = Settings.getUsername();
+        String password = Settings.getPassword();
+        try {
+            Connection connection = DriverManager.getConnection(url, user, password);
+            String sql = "SELECT * FROM stats WHERE statID = ?;";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, statID);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            System.err.println("Can't connect to MySQL: " + e.getMessage());
+        }
+        return false;
+    }
+
+    private static void createStat(int statsID, String statName) {
+        String url = "jdbc:mysql://" + Settings.getHost() + ":" + Settings.getPort() + "/Stats_Settings";
+        String user = Settings.getUsername();
+        String password = Settings.getPassword();
+        try {
+            Connection connection = DriverManager.getConnection(url, user, password);
+            String sql = "INSERT INTO stats (statID, statName) VALUES (?, ?)"; //TODO ADD point calculation and stat structure
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, statsID);
+            statement.setString(2, statName);
+            statement.execute();
+        } catch (SQLException e) {
+            System.err.println("Can't connect to MySQL: " + e.getMessage());
+        }
+    }
+
+    private static boolean statExistsInCurrentSeason(int statID) {
+        String url = "jdbc:mysql://" + Settings.getHost() + ":" + Settings.getPort() + "/Stats_Settings";
+        String user = Settings.getUsername();
+        String password = Settings.getPassword();
+        try {
+            Connection connection = DriverManager.getConnection(url, user, password);
+            String sql = "SELECT * FROM existingStatsPerSeason WHERE seasonID = ? AND statID = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, Data.getCurrentSeason());
+            statement.setInt(2, statID);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            System.err.println("Can't connect to MySQL: " + e.getMessage());
+        }
+        return false;
+    }
+
+    private static void createStatTableInCurrentSeason(int statID, @NotNull List<String> stats) {
+        String url = "jdbc:mysql://" + Settings.getHost() + ":" + Settings.getPort() + "/Stats_Season_" + Data.getCurrentSeason();
+        String user = Settings.getUsername();
+        String password = Settings.getPassword();
+        StringBuilder columns = new StringBuilder();
+        for (String str : stats) {
+            columns.append(str).append(" DOUBLE DEFAULT 0, ");
+        }
+        try {
+            Connection connection = DriverManager.getConnection(url, user, password);
+            Statement statement = connection.createStatement();
+            String sql = "CREATE TABLE id_" + statID + " (uuid varchar(255) PRIMARY KEY, " + columns + "FOREIGN KEY (uuid) REFERENCES Stats_Settings.uuids(uuid));"; //TODO Change 255
+            statement.execute(sql);
+
+            sql = "INSERT INTO Stats_Settings.existingStatsPerSeason (seasonID, statID) VALUES (?, ?);";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, Data.getCurrentSeason());
+            preparedStatement.setInt(2, statID);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            System.err.println("Can't connect to MySQL: " + e.getMessage());
+        }
     }
 
     private static void loadAPIasRead() {
-        setCurrentSeason();
         setMinigameIDsOForEachSeason();
     }
 
@@ -174,9 +273,9 @@ public abstract class APILoader {
             Statement statement = connection.createStatement();
             String sql = "CREATE TABLE seasons (seasonID INT AUTO_INCREMENT PRIMARY KEY, start DATE, end DATE);";
             statement.execute(sql);
-            sql = "CREATE TABLE stats (statID INT AUTO_INCREMENT PRIMARY KEY, statName INT);";
+            sql = "CREATE TABLE stats (statID INT AUTO_INCREMENT PRIMARY KEY, statName varchar(255));"; //TODO Change 255; ADD Point calculation and structure
             statement.execute(sql);
-            sql = "CREATE TABLE existingStatsPerSeason (seasonID INT, statsID INT, PRIMARY KEY (seasonID, statsID), FOREIGN KEY (seasonID) REFERENCES seasons(seasonID), FOREIGN KEY (statsID) REFERENCES stats(statID));";
+            sql = "CREATE TABLE existingStatsPerSeason (seasonID INT, statID INT, PRIMARY KEY (seasonID, statID), FOREIGN KEY (seasonID) REFERENCES seasons(seasonID), FOREIGN KEY (statID) REFERENCES stats(statID));";
             statement.execute(sql);
             sql = "CREATE TABLE uuids (uuid varchar(255), PRIMARY KEY (uuid));"; //TODO Change 255
             statement.execute(sql);
@@ -217,6 +316,10 @@ public abstract class APILoader {
         } catch (SQLException e) {
             System.err.println("Can't connect to MySQL: " + e.getMessage());
         }
+    }
+
+    private static void loadStats(){
+        //TODO Alle statIDs zu Data hinzufügen
     }
 
     private static void setCurrentSeason() {
