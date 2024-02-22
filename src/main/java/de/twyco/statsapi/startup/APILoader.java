@@ -4,6 +4,7 @@ import de.twyco.statsapi.misc.Data;
 import de.twyco.statsapi.stats.Stat;
 import de.twyco.statsapi.stats.Statistic;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -28,14 +29,16 @@ public abstract class APILoader {
     public static void main(String[] args) throws IOException {
         loadAPI("DataFolder");
         //TESTS
-        Statistic statistic = new Statistic(UUID.fromString("a6555008-9a7e-4668-a505-05517b2b89bc"));
+        System.out.println(new JSONObject(Settings.getDummyEntry()));
+        UUID uuid = UUID.fromString("a6555008-9a7e-4668-a505-05517b2b89bc");
+        API.registerNewUUID(uuid);
+        Statistic statistic = new Statistic(uuid);
         for (Stat stat : statistic.getStats()) {
             System.out.println(stat.getName() + " | " + stat.getValue());
         }
         statistic.setStat("kills", 11);
-        statistic.updateStat("deaths", 3);
-        statistic.setStat("gamesPlayed", 787);
-        statistic.updateStat("gamesWon", 3, -1000);
+        statistic.setStat("deaths", 3);
+        statistic.setStat("chests", 787);
         statistic.save();
     }
 
@@ -62,7 +65,8 @@ public abstract class APILoader {
 
     private static void loadAPIasWrite() {
         if (!statExists(Settings.getStatsID())) {
-            createStat(Settings.getStatsID(), Settings.getStatsName());
+            JSONObject jsonObject = new JSONObject(Settings.getDummyEntry());
+            createStat(Settings.getStatsID(), Settings.getStatsName(), jsonObject, Settings.getPointsCalculation());
         } else {
             //TODO Override dummyEntry, statName and Point Calculation in settings.yml
             // reload Settings
@@ -90,16 +94,19 @@ public abstract class APILoader {
         return false;
     }
 
-    private static void createStat(int statsID, String statName) {
+    private static void createStat(int statsID, String statName, JSONObject structure, String pointCalculation) {
         String url = "jdbc:mysql://" + Settings.getHost() + ":" + Settings.getPort() + "/Stats_Settings";
         String user = Settings.getUsername();
         String password = Settings.getPassword();
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
-            String sql = "INSERT INTO stats (statID, statName) VALUES (?, ?)"; //TODO ADD point calculation and stat structure
+            String sql = "INSERT INTO stats (statID, statName, structure, pointCalculation) VALUES (?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, statsID);
             statement.setString(2, statName);
+            statement.setString(3, structure.toString());
+            statement.setString(4, pointCalculation);
+
             statement.execute();
         } catch (SQLException e) {
             System.err.println("Can't connect to MySQL: " + e.getMessage());
@@ -245,7 +252,7 @@ public abstract class APILoader {
         } catch (SQLException e) {
             createDatabase("Stats_Settings");
             createSettingsTables();
-            createDatabase("Stats_Season_0");
+            createDatabase("Stats_Season_1");
         }
     }
 
@@ -273,7 +280,7 @@ public abstract class APILoader {
             Statement statement = connection.createStatement();
             String sql = "CREATE TABLE seasons (seasonID INT AUTO_INCREMENT PRIMARY KEY, start DATE, end DATE);";
             statement.execute(sql);
-            sql = "CREATE TABLE stats (statID INT AUTO_INCREMENT PRIMARY KEY, statName varchar(255));"; //TODO Change 255; ADD Point calculation and structure
+            sql = "CREATE TABLE stats (statID INT AUTO_INCREMENT PRIMARY KEY, statName varchar(255), structure JSON NOT NULL, pointCalculation varchar(255));"; //TODO Change 255; ADD Point calculation and structure
             statement.execute(sql);
             sql = "CREATE TABLE existingStatsPerSeason (seasonID INT, statID INT, PRIMARY KEY (seasonID, statID), FOREIGN KEY (seasonID) REFERENCES seasons(seasonID), FOREIGN KEY (statID) REFERENCES stats(statID));";
             statement.execute(sql);

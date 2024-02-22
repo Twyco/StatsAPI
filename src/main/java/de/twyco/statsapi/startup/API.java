@@ -21,4 +21,9 @@ public abstract class API {
         }
     }
 
+    public static void newSeason() {
+        //TODO
+    }
+
+
 }
